@@ -1,3 +1,4 @@
+from itertools import count
 import numpy as np
 from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import *
@@ -11,39 +12,65 @@ class MainPage(QMainWindow):
         loadUi("mainwindow.ui", self)
         self.setWindowTitle("Calculator")
 
-        self.display = ""
-        self.total = 0
+        self.x = ""
+        self.y = ""
 
         # giving number buttons functionality
         for i in range(self.gridLayout_3.count()):
             item = self.gridLayout_3.itemAt(i).widget()
             if "_" in item.objectName():
                 item.clicked.connect(self.number_clicked)
-            elif item.text() in ["+", "-", "X", "÷", "="]:
+            elif item.text() in ["+", "-", "*", "÷", "="]:
                 item.clicked.connect(self.calculation)
+            else:
+                item.clicked.connect(self.func)
 
     def number_clicked(self):
-        self.display = self.display + self.sender().text()
-        self.label.setText(self.display)
+        # self.display = self.display + self.sender().text()
+        self.x += self.sender().text()
+        self.label.setText(self.x)
 
     def calculation(self):
-        item = self.sender().objectName()
-        print(item)
-        if item == "plus":
-            self.total += int(self.display)
-            self.display = ""
-            # self.total += int(self.display)
-            # self.label.setText(str(self.total))
-        elif item == "minus":
+        item = self.sender().text()
+        if item == "+":
+            self.y += str(self.x) + "+"
+            self.x = ""
+        elif item == "-":
+            self.y += str(self.x) + "-"
+            self.x = ""
+        elif item == "÷":
+            self.y = f"({self.y})/{self.x}"
+            self.x = ""
+        elif item == "*":
+            if len(self.y) > 2:
+                self.y = f"({self.y})*{self.x}"
+            else:
+                self.y += str(self.x) + "*"
+            self.x = ""
+        elif item == "=":
+            try:
+                self.y += self.x
+                solution = eval(self.y)
+                if len(str(solution)) > 14:
+                    self.label.setText(str(round(solution, 12)))
+                else:
+                    self.label.setText(str(solution))
+                self.x = ""
+            except Exception as er:
+                print(er)
+        print(self.y)
+
+    def func(self):
+        item = self.sender().text()
+        if item == "AC":
+            self.y = ""
+            self.x = ""
+            self.label.setText("")
+        elif item == "+/-":
             pass
-        elif item == "divide":
-            pass
-        elif item == "multiplication":
-            pass
-        elif item == "equal":
-            self.total += int(self.display)
-            self.label.setText(str(self.total))
-            self.display = str(self.total)
+        elif item == ",":
+            self.x += "."
+            self.label.setText(self.x)
 
 
 if __name__ == "__main__":

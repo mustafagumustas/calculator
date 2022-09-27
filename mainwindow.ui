@@ -369,7 +369,7 @@ font: 24pt &quot;.AppleSystemUIFont&quot;;
 color: rgb(255, 255, 255);</string>
              </property>
              <property name="text">
-              <string>X</string>
+              <string>*</string>
              </property>
             </widget>
            </item>
@@ -430,7 +430,7 @@ color: rgb(255, 255, 255);</string>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QPushButton" name="pushButton_8">
+            <widget class="QPushButton" name="_2">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                <horstretch>0</horstretch>
