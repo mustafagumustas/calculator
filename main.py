@@ -26,9 +26,10 @@ class MainPage(QMainWindow):
                 item.clicked.connect(self.func)
 
     def number_clicked(self):
-        # self.display = self.display + self.sender().text()
+        # when user clicks on nubmer buttons, this function will detect which
+        # one it is and then adds to the label
         self.x += self.sender().text()
-        self.label.setText(self.x)
+        self.change_label(self.x)
 
     def calculation(self):
         item = self.sender().text()
@@ -39,7 +40,10 @@ class MainPage(QMainWindow):
             self.y += str(self.x) + "-"
             self.x = ""
         elif item == "÷":
-            self.y = f"({self.y})/{self.x}"
+            if len(self.y) > 2:
+                self.y = f"({self.y})/{self.x}"
+            else:
+                self.y += str(self.x) + "/"
             self.x = ""
         elif item == "*":
             if len(self.y) > 2:
@@ -49,25 +53,44 @@ class MainPage(QMainWindow):
             self.x = ""
         elif item == "=":
             try:
+                # ERROR WHEN THERE IS NO Y VALUE PROGRAMME CRASHES
                 self.y += self.x
                 solution = eval(self.y)
-                if len(str(solution)) > 14:
-                    self.label.setText(str(round(solution, 12)))
-                else:
-                    self.label.setText(str(solution))
+                self.change_label(solution)
                 self.x = ""
             except Exception as er:
                 print(er)
         print(self.y)
 
+    def change_label(self, value):
+        # changing the label based on what kind of number it is
+        if len(str(value)) > 14:
+            value = round(value, 12)
+        if value != "":
+            if float(value).is_integer():
+                value = int(value)
+            else:
+                value = float(value)
+        self.label.setText(str(value))
+
     def func(self):
         item = self.sender().text()
         if item == "AC":
-            self.y = ""
-            self.x = ""
-            self.label.setText("")
+            if self.y != "":
+                self.y = ""
+            if self.x != "":
+                self.x = ""
+            self.change_label("")
         elif item == "+/-":
-            pass
+            number = self.label.text()
+            if float(number) > 0:
+                self.x = f"-{number}"
+                self.change_label(self.x)
+            elif "-" in number:
+                self.x = number.split("-")[1]
+                self.change_label(self.x)
+            else:
+                pass
         elif item == ",":
             self.x += "."
             self.label.setText(self.x)
