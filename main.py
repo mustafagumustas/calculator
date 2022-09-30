@@ -75,6 +75,7 @@ class MainPage(QMainWindow):
 
     def func(self):
         item = self.sender().text()
+        print(item)
         if item == "AC":
             if self.y != "":
                 self.y = ""
@@ -94,6 +95,9 @@ class MainPage(QMainWindow):
         elif item == ",":
             self.x += "."
             self.label.setText(self.x)
+        elif item == "%":
+            self.x = float(self.x) / 100
+            self.change_label(self.x)
 
 
 if __name__ == "__main__":
